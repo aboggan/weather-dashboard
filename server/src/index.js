@@ -17,7 +17,11 @@ app.get('/', (req, res) => {
   res.send('Weather API is running');
 });
 
-// Start server
-app.listen(config.port, () => {
-  console.log(`Server listening on port ${config.port}`);
-});
+// Start server only if not imported by tests
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(config.port, () => {
+    console.log(`Server listening on port ${config.port}`);
+  });
+}
+
+export default app;
