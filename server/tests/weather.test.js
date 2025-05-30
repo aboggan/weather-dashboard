@@ -2,16 +2,28 @@ import request from 'supertest';
 import app from '../src/index.js';
 
 describe('Weather API Endpoints', () => {
-  test('GET /api/weather/current/:city returns weather data', async () => {
-    const city = 'London';
-    const response = await request(app).get(`/api/weather/current/${city}`);
 
-    // Should respond with status 200
-    expect(response.statusCode).toBe(200);
-
-    // Should contain 'city' and 'temp' in the response body
-    expect(response.body).toHaveProperty('city', city);
-    expect(response.body).toHaveProperty('temp');
-    expect(typeof response.body.temp).toBe('number');
+  describe('GET /api/weather/current/:city', () => {
+    test('returns weather data', async () => {
+      const city = 'London';
+      const response = await request(app).get(`/api/weather/current/${city}`);
+      
+      expect(response.statusCode).toBe(200);
+      expect(response.body).toHaveProperty('city', city);
+      expect(response.body).toHaveProperty('temp');
+    });
   });
+
+  describe('GET /api/weather/forecast/:city', () => {
+    test('returns forecast data', async () => {
+      const city = 'London';
+      const response = await request(app).get(`/api/weather/forecast/${city}`);
+      
+      expect(response.statusCode).toBe(200);
+      expect(response.body).toHaveProperty('city', city);
+      expect(response.body).toHaveProperty('forecast');
+      expect(Array.isArray(response.body.forecast)).toBe(true);
+    });
+  });
+
 });
