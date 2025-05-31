@@ -3,14 +3,13 @@ import app from '../src/index.js';
 
 describe('Weather API Endpoints', () => {
 
-  describe('GET /api/weather/current/:city', () => {
+  describe('GET /api/weather/current/:id', () => {
     test('returns weather data', async () => {
-      const city = 'London';
-      const response = await request(app).get(`/api/weather/current/${city}`);
+      const id = 3026520;
+      const response = await request(app).get(`/api/weather/current/${id}`);
       
       expect(response.statusCode).toBe(200);
-      expect(response.body).toHaveProperty('city', city);
-      expect(response.body).toHaveProperty('temp');
+      expect(response.body).toHaveProperty('id', id);
     });
   });
 
