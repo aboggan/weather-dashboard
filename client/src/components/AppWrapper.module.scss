@@ -1,0 +1,9 @@
+.wrapper {
+    padding: 0 1rem; // mobile default
+  
+    @media (min-width: 768px) {
+      padding: 0 4rem; // desktop padding
+      max-width: 900px;
+      margin: 0 auto;
+    }
+  }

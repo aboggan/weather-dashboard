@@ -2,8 +2,7 @@ import React, { useState, useContext, useEffect, useRef } from 'react';
 import { WeatherContext } from '../context/WeatherContext';
 import styles from './SearchBar.module.scss';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { IoIosSearch } from "react-icons/io";
 
 let citiesData = null;
 
@@ -136,7 +135,7 @@ const SearchBar = () => {
                         onKeyDown={handleKeyDown}
                         className={styles.input}
                     />
-                     <FontAwesomeIcon icon={faSearch} className={styles.searchIcon} />
+                    <IoIosSearch className={styles.searchIcon}/>
                     <ul className={styles.suggestions}>
                         {suggestions.map((item, index) => (
                             <li
