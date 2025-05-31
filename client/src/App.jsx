@@ -1,11 +1,14 @@
 import React from 'react';
+import { WeatherProvider } from './context/WeatherContext';
+import SearchBar from './components/SearchBar';
+import WeatherCard from './components/WeatherCard';
 
 const App = () => {
   return (
-    <div>
-      <h1>My Weather Dashboard</h1>
-      <p>Start building your weather dashboard here.</p>
-    </div>
+    <WeatherProvider>
+      <SearchBar />
+      <WeatherCard />
+    </WeatherProvider>
   );
 };
 
