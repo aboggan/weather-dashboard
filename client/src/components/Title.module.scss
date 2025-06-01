@@ -1,0 +1,28 @@
+// Title.module.scss
+@use '../styles/variables' as *;
+
+.title {
+    font-family: $font-family;
+    display: flex;
+
+    h1 {
+        margin: 0;
+    }
+
+    @media screen and (min-width: 768px) {
+
+        text-align: left;
+    }
+
+    .icon {
+        align-self: end;
+
+        svg {
+
+            color: $color-blue;
+            margin-right: 1rem;
+            font-size: 2rem;
+            padding-top: 4px;
+        }
+    }
+}

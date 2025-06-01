@@ -95,9 +95,9 @@ const WeatherCard = () => {
                         alt={weather.weather[0].description}
                     />
                     <div className={styles.tempInfo}>
-                        <div className={styles.temp}>{weather.main.temp}°C</div>
+                        <div className={styles.temp}>{parseInt(weather.main.temp, 10)}°C</div>
                         <div className={styles.description}>{weather.weather[0].description}</div>
-                        <div className={styles.feelsLike}>Feels like: {weather.main.feels_like}°C</div>
+                        <div className={styles.feelsLike}>Feels like: {parseInt(weather.main.feels_like, 10)}°C</div>
                     </div>
                 </div>
                 <div className={styles.extraInfo}>
