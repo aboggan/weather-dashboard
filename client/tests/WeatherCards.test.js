@@ -1,8 +1,7 @@
-import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
+import React from 'react';
 import WeatherCard from '../src/components/WeatherCard';
 import { WeatherContext } from '../src/context/WeatherContext';
-import { getApiUrl } from '../src/utils/getApiUrl';
 
 jest.mock('../src/utils/getApiUrl', () => ({
   getApiUrl: () => 'http://localhost:4000',

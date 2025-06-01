@@ -25,12 +25,26 @@ const formatDate = (dateString) => {
     });
 };
 
+// Initial screen (shown when no city is selected)
+const InitialScreen = () => (
+    <div className={`${styles.weatherCard} ${styles.initialScreen}`}>
+        <p>Please select a city to view the weather.</p>
+    </div>
+);
+
+// Loading screen
+const LoadingScreen = () => (
+    <div className={`${styles.weatherCard} ${styles.loadingScreen}`}>
+        <p>Loading...</p>
+    </div>
+);
+
 const WeatherCard = () => {
     const { weatherData } = useContext(WeatherContext);
     const cityId = weatherData?.id;
 
     const [weather, setWeather] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -42,8 +56,6 @@ const WeatherCard = () => {
 
             try {
                 const apiUrl = getApiUrl();
-
-
                 const response = await fetch(`${apiUrl}/api/weather/current/${parseInt(cityId, 10)}`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch weather data');
@@ -60,7 +72,8 @@ const WeatherCard = () => {
         fetchWeather();
     }, [cityId]);
 
-    if (loading) return <p>Loading...</p>;
+    if (!cityId) return <InitialScreen />;
+    if (loading) return <LoadingScreen />;
     if (error) return <p>Error: {error}</p>;
     if (!weather) return null;
 

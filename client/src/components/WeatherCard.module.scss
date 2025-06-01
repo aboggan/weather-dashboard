@@ -12,6 +12,7 @@
     font-family: $font-family;
     margin-top: 20px;
     padding-bottom: 1rem;
+
     @media screen and (min-width: 768px) {
         align-items: flex-start;
     }
@@ -101,6 +102,7 @@
     .date {
         margin-bottom: 0.5rem;
         color: $color-heavy-grey;
+
         @media (min-width: 768px) {
             text-align: left;
         }
@@ -151,11 +153,11 @@
         }
 
         .sunriseIcon {
-            color: $color-sunrise; 
+            color: $color-sunrise;
         }
 
         .sunsetIcon {
-            color: $color-sunset; 
+            color: $color-sunset;
         }
 
     }
@@ -192,4 +194,10 @@
             text-align: right;
         }
     }
+}
+
+
+.initialScreen,
+.loadingScreen {
+    min-height: 204px;
 }
