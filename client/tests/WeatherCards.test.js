@@ -40,4 +40,24 @@ describe('WeatherCard Component', () => {
       expect(screen.getByText(/clear sky/i)).toBeInTheDocument();
     });
   });
+
+  test('renders error message when fetch fails', async () => {
+   
+    global.fetch.mockImplementationOnce(() =>
+      Promise.resolve({
+        ok: false,
+        statusText: 'Internal Server Error',
+      })
+    );
+
+    render(
+      <WeatherContext.Provider value={{ weatherData: mockWeatherData }}>
+        <WeatherCard />
+      </WeatherContext.Provider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText(/Error:/i)).toBeInTheDocument();
+    });
+  });
 });
