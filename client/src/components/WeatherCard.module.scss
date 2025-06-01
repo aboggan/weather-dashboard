@@ -66,6 +66,8 @@
     img {
         width: 80px;
         height: 80px;
+        filter: brightness(0) saturate(100%) invert(46%) sepia(94%) saturate(4000%) hue-rotate(345deg) brightness(95%) contrast(95%);
+
     }
 
     .tempInfo {

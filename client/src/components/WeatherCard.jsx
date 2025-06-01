@@ -1,61 +1,11 @@
-// WeatherCard.jsx
-import React from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { WeatherContext } from '../context/WeatherContext';
 import { CiStar } from "react-icons/ci";
-import styles from './WeatherCard.module.scss';
 import { TbDroplet } from "react-icons/tb";
-import { LuWind } from "react-icons/lu";
-import { LuSunrise } from "react-icons/lu";
-import { LuSunset } from "react-icons/lu";
-// Mock data
-const mockWeatherData = {
-    coord: {
-        lon: -58.3816,
-        lat: -34.6037
-    },
-    weather: [
-        {
-            id: 800,
-            main: "Clear",
-            description: "clear sky",
-            icon: "01d"
-        }
-    ],
-    base: "stations",
-    main: {
-        temp: 25.5,
-        feels_like: 26.2,
-        temp_min: 24.0,
-        temp_max: 27.0,
-        pressure: 1013,
-        humidity: 50
-    },
-    visibility: 10000,
-    wind: {
-        speed: 3.6,
-        deg: 180
-    },
-    clouds: {
-        all: 0
-    },
-    dt: 1623411600,
-    sys: {
-        type: 1,
-        id: 8233,
-        country: "AR",
-        sunrise: 1623392900,
-        sunset: 1623431900
-    },
-    timezone: -10800,
-    id: 3435910,
-    name: "Buenos Aires",
-    cod: 200,
-    currentDate: "2025-05-31"
-};
+import { LuWind, LuSunrise, LuSunset } from "react-icons/lu";
+import styles from './WeatherCard.module.scss';
 
-
-
-
-// Utility function for time formatting
+// Utility functions
 const formatTime = (timestamp, timezoneOffset) => {
     const date = new Date((timestamp + timezoneOffset) * 1000);
     return date.toLocaleTimeString('en-US', {
@@ -64,22 +14,57 @@ const formatTime = (timestamp, timezoneOffset) => {
         hour12: true
     });
 };
+
 const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
-        weekday: 'short',   // Sat, Sun, etc.
-        month: 'short',     // Jan, Feb, etc.
-        day: 'numeric'      // 31, 24, etc.
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric'
     });
 };
 
 const WeatherCard = () => {
-    const weather = mockWeatherData;
-    const timezoneOffset = weather.timezone; // in seconds
+    const { weatherData } = useContext(WeatherContext);
+    const cityId = weatherData?.id;
+
+    const [weather, setWeather] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        if (!cityId) return;
+
+        const fetchWeather = async () => {
+            setLoading(true);
+            setError(null);
+
+            try {
+                const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+                const response = await fetch(`${apiUrl}/api/weather/current/${parseInt(cityId, 10)}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch weather data');
+                }
+                const data = await response.json();
+                setWeather(data);
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchWeather();
+    }, [cityId]);
+
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error: {error}</p>;
+    if (!weather) return null;
+
+    const timezoneOffset = weather.timezone;
 
     return (
         <div className={styles.weatherCard}>
-
             <div className={styles.cityField}>
                 <h2>{weather.name} <span>({weather.sys.country})</span></h2>
                 <div className={styles.favorite}>
@@ -104,9 +89,7 @@ const WeatherCard = () => {
                     <div className={styles.metrics}>
                         <div className={styles.column}>
                             <div className={styles.infoItem}><TbDroplet className={styles.humidityIcon} />Humidity: {weather.main.humidity}%</div>
-
                             <div className={styles.infoItem}><LuSunrise className={styles.sunriseIcon} />Sunrise: {formatTime(weather.sys.sunrise, weather.timezone)}</div>
-
                         </div>
                         <div className={styles.column}>
                             <div className={styles.infoItem}><LuWind className={styles.windIcon} />Wind: {weather.wind.speed} m/s</div>
@@ -114,17 +97,7 @@ const WeatherCard = () => {
                         </div>
                     </div>
                 </div>
-
             </div>
-
-
-
-
-
-
-
-
-
         </div>
     );
 };
