@@ -4,6 +4,7 @@ import { CiStar } from "react-icons/ci";
 import { TbDroplet } from "react-icons/tb";
 import { LuWind, LuSunrise, LuSunset } from "react-icons/lu";
 import styles from './WeatherCard.module.scss';
+import { getApiUrl } from '../utils/getApiUrl';
 
 // Utility functions
 const formatTime = (timestamp, timezoneOffset) => {
@@ -40,7 +41,9 @@ const WeatherCard = () => {
             setError(null);
 
             try {
-                const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+                const apiUrl = getApiUrl();
+
+
                 const response = await fetch(`${apiUrl}/api/weather/current/${parseInt(cityId, 10)}`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch weather data');
