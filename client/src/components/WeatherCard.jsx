@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { WeatherContext } from '../context/WeatherContext';
+import { TemperatureContext } from '../context/TemperatureContext';
 import { CiStar } from "react-icons/ci";
 import { TbDroplet } from "react-icons/tb";
 import { LuWind, LuSunrise, LuSunset } from "react-icons/lu";
 import styles from './WeatherCard.module.scss';
 import { getApiUrl } from '../utils/getApiUrl';
 
-// Utility functions
 const formatTime = (timestamp, timezoneOffset) => {
     const date = new Date((timestamp + timezoneOffset) * 1000);
     return date.toLocaleTimeString('en-US', {
@@ -25,27 +25,33 @@ const formatDate = (dateString) => {
     });
 };
 
-// Initial screen (shown when no city is selected)
 const InitialScreen = () => (
     <div className={`${styles.weatherCard} ${styles.initialScreen}`}>
         <p>Please select a city to view the weather.</p>
     </div>
 );
 
-// Loading screen
 const LoadingScreen = () => (
     <div className={`${styles.weatherCard} ${styles.loadingScreen}`}>
         <p>Loading...</p>
     </div>
 );
 
+
 const WeatherCard = () => {
     const { weatherData } = useContext(WeatherContext);
+    const { unit } = useContext(TemperatureContext);
     const cityId = weatherData?.id;
 
     const [weather, setWeather] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+
+    const convertWindSpeed = (speed) => {
+        return unit === 'C'
+            ? `${speed} m/s`
+            : `${(speed * 2.237).toFixed(1)} mph`;
+    };
 
     useEffect(() => {
         if (!cityId) return;
@@ -79,6 +85,12 @@ const WeatherCard = () => {
 
     const timezoneOffset = weather.timezone;
 
+    const convertTemperature = (temp) => {
+        return unit === 'C'
+            ? Math.round(temp)
+            : Math.round((temp * 9) / 5 + 32);
+    };
+
     return (
         <div className={styles.weatherCard}>
             <div className={styles.cityField}>
@@ -95,21 +107,33 @@ const WeatherCard = () => {
                         alt={weather.weather[0].description}
                     />
                     <div className={styles.tempInfo}>
-                        <div className={styles.temp}>{parseInt(weather.main.temp, 10)}°C</div>
+                        <div className={styles.temp}>
+                            {convertTemperature(weather.main.temp)}°{unit}
+                        </div>
                         <div className={styles.description}>{weather.weather[0].description}</div>
-                        <div className={styles.feelsLike}>Feels like: {parseInt(weather.main.feels_like, 10)}°C</div>
+                        <div className={styles.feelsLike}>
+                            Feels like: {convertTemperature(weather.main.feels_like)}°{unit}
+                        </div>
                     </div>
                 </div>
                 <div className={styles.extraInfo}>
                     <div className={styles.date}>{formatDate(weather.currentDate)}</div>
                     <div className={styles.metrics}>
                         <div className={styles.column}>
-                            <div className={styles.infoItem}><TbDroplet className={styles.humidityIcon} />Humidity: {weather.main.humidity}%</div>
-                            <div className={styles.infoItem}><LuSunrise className={styles.sunriseIcon} />Sunrise: {formatTime(weather.sys.sunrise, weather.timezone)}</div>
+                            <div className={styles.infoItem}>
+                                <TbDroplet className={styles.humidityIcon} />Humidity: {weather.main.humidity}%
+                            </div>
+                            <div className={styles.infoItem}>
+                                <LuSunrise className={styles.sunriseIcon} />Sunrise: {formatTime(weather.sys.sunrise, weather.timezone)}
+                            </div>
                         </div>
                         <div className={styles.column}>
-                            <div className={styles.infoItem}><LuWind className={styles.windIcon} />Wind: {weather.wind.speed} m/s</div>
-                            <div className={styles.infoItem}><LuSunset className={styles.sunsetIcon} />Sunset: {formatTime(weather.sys.sunset, weather.timezone)}</div>
+                            <div className={styles.infoItem}>
+                                <LuWind className={styles.windIcon} />Wind: {convertWindSpeed(weather.wind.speed)}
+                            </div>
+                            <div className={styles.infoItem}>
+                                <LuSunset className={styles.sunsetIcon} />Sunset: {formatTime(weather.sys.sunset, weather.timezone)}
+                            </div>
                         </div>
                     </div>
                 </div>
