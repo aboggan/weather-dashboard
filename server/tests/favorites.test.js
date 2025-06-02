@@ -1,13 +1,15 @@
 import request from 'supertest';
-import app from '../src/index.js'; 
+import app from '../src/index.js';
 import mongoose from 'mongoose';
-import FavoriteCity from '../src/models/FavoriteCity.js'; 
+import FavoriteCity from '../src/models/FavoriteCity.js';
 
 describe('Favorites API Endpoints', () => {
   beforeAll(async () => {
+    // Optional: connect to the test database if needed
   });
 
   afterAll(async () => {
+    // Optional: close the database connection if needed
   });
 
   afterEach(async () => {
@@ -27,8 +29,7 @@ describe('Favorites API Endpoints', () => {
     expect(response.body.message).toBe('City added to favorites');
   });
 
-  test('GET /api/weather/favorites should return list of favorite cities', async () => {
-    
+  test('GET /api/weather/favorites/:uuid should return list of favorite cities', async () => {
     await FavoriteCity.create({
       user_uuid: 'test-user',
       city_name: 'London',
@@ -36,8 +37,7 @@ describe('Favorites API Endpoints', () => {
     });
 
     const response = await request(app)
-      .get('/api/weather/favorites')
-      .query({ user_uuid: 'test-user' });
+      .get('/api/weather/favorites/test-user');
 
     expect(response.status).toBe(200);
     expect(response.body.length).toBeGreaterThan(0);
@@ -55,6 +55,6 @@ describe('Favorites API Endpoints', () => {
       .delete(`/api/weather/favorites/${favorite._id}`);
 
     expect(response.status).toBe(200);
-    expect(response.body.message).toBe('City removed from favorites');
+    expect(response.body.message).toBe('Favorite deleted');
   });
 });
