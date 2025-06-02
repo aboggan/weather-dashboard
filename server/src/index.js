@@ -2,9 +2,9 @@ import express from 'express';
 import config from './config/config.js';
 import corsMiddleware from './middleware/corsMiddleware.js';
 import weatherRoutes from './routes/weather.js';
-
+import connectDB from './models/db.js';
 const app = express();
-
+connectDB();
 // Middlewares
 app.use(express.json());
 app.use(corsMiddleware);

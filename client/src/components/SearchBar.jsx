@@ -1,8 +1,10 @@
-import React, { useState, useContext, useEffect, useRef } from 'react';
-import { WeatherContext } from '../context/WeatherContext';
-import styles from './SearchBar.module.scss';
-
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { IoIosSearch } from "react-icons/io";
+import { HistoryContext } from '../context/HistoryContext';
+import { WeatherContext } from '../context/WeatherContext';
+import { v4 as uuidv4 } from 'uuid';
+
+import styles from './SearchBar.module.scss';
 
 let citiesData = null;
 
@@ -12,11 +14,10 @@ const SearchBar = () => {
     const [selectedIndex, setSelectedIndex] = useState(-1);
     const [errorMessage, setErrorMessage] = useState('');
     const { setWeatherData } = useContext(WeatherContext);
+    const { addToHistory } = useContext(HistoryContext);
 
-    // Reference to the suggestions container
     const suggestionsRef = useRef(null);
 
-    // Function to load cities data from JSON
     const loadCities = async () => {
         if (!citiesData) {
             const response = await fetch('/cities.json');
@@ -32,7 +33,6 @@ const SearchBar = () => {
 
         if (value.trim().length > 2) {
             await loadCities();
-
             const filteredCities = citiesData
                 .filter((item) =>
                     item.name.toLowerCase().startsWith(value.trim().toLowerCase())
@@ -47,6 +47,7 @@ const SearchBar = () => {
 
     const handleSuggestionClick = (selectedCity) => {
         setWeatherData({ city: selectedCity.name, id: selectedCity.id });
+        addToHistory({ name: selectedCity.name, id: selectedCity.id });
         setCity(selectedCity.name);
         setSuggestions([]);
         setErrorMessage('');
@@ -68,6 +69,7 @@ const SearchBar = () => {
 
         if (matchingCity) {
             setWeatherData({ city: matchingCity.name, id: matchingCity.id });
+            addToHistory({ name: matchingCity.name, id: matchingCity.id });
             setErrorMessage('');
             setCity(matchingCity.name);
         } else {
@@ -95,7 +97,6 @@ const SearchBar = () => {
         }
     };
 
-    // Hide suggestions on outside click or Escape key
     useEffect(() => {
         const handleClickOutside = (e) => {
             if (
@@ -141,8 +142,7 @@ const SearchBar = () => {
                             <li
                                 key={index}
                                 onClick={() => handleSuggestionClick(item)}
-                                className={`${styles.suggestionItem} ${selectedIndex === index ? styles.selected : ''
-                                    }`}
+                                className={`${styles.suggestionItem} ${selectedIndex === index ? styles.selected : ''}`}
                             >
                                 {item.name}, {item.country}
                             </li>

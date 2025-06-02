@@ -1,0 +1,71 @@
+@use '../styles/variables' as *;
+
+.historyContainer {
+  background: $color-background;
+  
+  border-radius: $border-radius;
+  border: 1px solid $color-border;
+  width: 100%;
+  box-shadow: $shadow;
+  font-family: $font-family;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.icon {
+  margin-right: 0.5rem;
+  color: $color-text-grey;
+  font-size: 1.2rem;
+}
+
+.historyList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.historyItem {
+    background-color: $color-background;
+    color: $color-text-primary;
+    border: 1px solid $color-border;
+    border-radius: 5px;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+  
+    &:hover {
+      background-color: $color-light-grey;
+      border-color: darken($color-border, 10%);
+    }
+  
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px rgba($color-blue, 0.3);
+    }
+  
+  }
+
+.clearButton {
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  color: $color-red;
+  margin-top: 2rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.clearButton:hover {
+  text-decoration: underline;
+}
+
+.deleteIcon {
+  margin-right: 0.3rem;
+}
