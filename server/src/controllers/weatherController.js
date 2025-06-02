@@ -1,5 +1,6 @@
 import axios from 'axios';
 import WeatherHistory from '../models/WeatherHistory.js';
+import FavoriteCity from '../models/FavoriteCity.js';
 
 // Simple cache to avoid repeated calls
 const cache = {};
@@ -118,7 +119,7 @@ const deleteUserHistory = async (req, res) => {
   try {
     await WeatherHistory.deleteMany({ user_uuid: uuid });
 
-    // Limpiar cache
+    // Clear cache
     const cacheKey = `history_${uuid}`;
     delete cache[cacheKey];
 
@@ -129,11 +130,95 @@ const deleteUserHistory = async (req, res) => {
   }
 };
 
+// POST /api/weather/favorites
+const addFavoriteCity = async (req, res) => {
+  const { user_uuid, city_name, city_id } = req.body;
+
+  if (!user_uuid || !city_name || !city_id) {
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
+
+  try {
+    const newFavorite = new FavoriteCity({
+      user_uuid,
+      city_name,
+      city_id
+    });
+    await newFavorite.save();
+
+    // Invalidate cache for this user's favorites
+    const cacheKey = `favorites_${user_uuid}`;
+    delete cache[cacheKey];
+
+    res.status(201).json({ message: 'City added to favorites' });
+  } catch (error) {
+    console.error('Error saving favorite:', error);
+    res.status(500).json({ error: 'Error saving favorite' });
+  }
+};
+
+// GET /api/weather/favorites/:uuid
+const getFavoriteCities = async (req, res) => {
+  const { uuid } = req.params;
+
+  if (!uuid) {
+    return res.status(400).json({ error: 'Missing user_uuid' });
+  }
+
+  const now = Date.now();
+  const cacheKey = `favorites_${uuid}`;
+  if (cache[cacheKey] && (now - cache[cacheKey].timestamp < CACHE_TTL_MS)) {
+    console.log('Serving user favorites from cache');
+    return res.status(200).json(cache[cacheKey].data);
+  }
+
+  try {
+    const favorites = await FavoriteCity.find({ user_uuid: uuid }).sort({ added_at: -1 });
+
+    // Save to cache
+    cache[cacheKey] = {
+      timestamp: now,
+      data: favorites
+    };
+
+    res.status(200).json(favorites);
+  } catch (error) {
+    console.error('Error fetching favorites:', error);
+    res.status(500).json({ error: 'Error fetching favorites' });
+  }
+};
+
+
+// DELETE /api/weather/favorites/:id
+const deleteFavoriteCity = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const favorite = await FavoriteCity.findById(id);
+    if (!favorite) {
+      return res.status(404).json({ error: 'Favorite not found' });
+    }
+
+    await FavoriteCity.findByIdAndDelete(id);
+
+    // Invalidate cache for this user's favorites
+    const cacheKey = `favorites_${favorite.user_uuid}`;
+    delete cache[cacheKey];
+
+    res.status(200).json({ message: 'Favorite deleted' });
+  } catch (error) {
+    console.error('Error deleting favorite:', error);
+    res.status(500).json({ error: 'Error deleting favorite' });
+  }
+};
 
 export {
   getCurrentWeather,
   getForecastWeather,
   getUserHistory,
   addUserHistory,
-  deleteUserHistory
+  deleteUserHistory,
+  addFavoriteCity,
+  getFavoriteCities,
+  deleteFavoriteCity
 };
