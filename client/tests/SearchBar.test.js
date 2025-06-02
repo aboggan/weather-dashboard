@@ -1,13 +1,16 @@
-// client/tests/SearchBar.test.js
-
 import React from 'react';
 import { render, fireEvent, screen, waitFor, act } from '@testing-library/react';
 import SearchBar from '../src/components/SearchBar';
 import { WeatherContext } from '../src/context/WeatherContext';
+import { HistoryContext } from '../src/context/HistoryContext';
 
-// Mock fetch for cities.json
+jest.mock('../src/utils/getApiUrl', () => ({
+  getApiUrl: () => 'http://localhost:4000',
+}));
+
 global.fetch = jest.fn(() =>
   Promise.resolve({
+    ok: true,
     json: () =>
       Promise.resolve([
         { id: 1, name: 'London', country: 'GB' },
@@ -16,20 +19,27 @@ global.fetch = jest.fn(() =>
   })
 );
 
-const mockContextValue = {
+const mockWeatherContext = {
   setWeatherData: jest.fn(),
+};
+
+const mockHistoryContext = {
+  addToHistory: jest.fn(),
 };
 
 describe('SearchBar Component', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    fetch.mockClear();
   });
 
   const renderWithProvider = () =>
     render(
-      <WeatherContext.Provider value={mockContextValue}>
-        <SearchBar />
-      </WeatherContext.Provider>
+      <HistoryContext.Provider value={mockHistoryContext}>
+        <WeatherContext.Provider value={mockWeatherContext}>
+          <SearchBar />
+        </WeatherContext.Provider>
+      </HistoryContext.Provider>
     );
 
   test('should not call setWeatherData for empty input', async () => {
@@ -40,7 +50,7 @@ describe('SearchBar Component', () => {
       fireEvent.click(searchButton);
     });
 
-    expect(mockContextValue.setWeatherData).not.toHaveBeenCalled();
+    expect(mockWeatherContext.setWeatherData).not.toHaveBeenCalled();
   });
 
   test('should call setWeatherData with valid city', async () => {
@@ -53,7 +63,7 @@ describe('SearchBar Component', () => {
     });
 
     await waitFor(() => {
-      expect(mockContextValue.setWeatherData).toHaveBeenCalledWith({
+      expect(mockWeatherContext.setWeatherData).toHaveBeenCalledWith({
         city: 'London',
         id: 1,
       });
@@ -71,7 +81,7 @@ describe('SearchBar Component', () => {
 
     await waitFor(() => {
       expect(screen.getByText(/city not found/i)).toBeInTheDocument();
-      expect(mockContextValue.setWeatherData).not.toHaveBeenCalled();
+      expect(mockWeatherContext.setWeatherData).not.toHaveBeenCalled();
     });
   });
 });
