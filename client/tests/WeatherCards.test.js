@@ -3,6 +3,7 @@ import React from 'react';
 import WeatherCard from '../src/components/WeatherCard';
 import { WeatherContext } from '../src/context/WeatherContext';
 import { TemperatureContext } from '../src/context/TemperatureContext';
+import { FavoritesContext } from '../src/context/FavoritesContext'; // <== Esto faltaba
 
 jest.mock('../src/utils/getApiUrl', () => ({
   getApiUrl: () => 'http://localhost:4000',
@@ -43,7 +44,15 @@ const renderWithProviders = (component) => {
   return render(
     <TemperatureContext.Provider value={{ unit: 'C' }}>
       <WeatherContext.Provider value={{ weatherData: mockWeatherData }}>
-        {component}
+        <FavoritesContext.Provider
+          value={{
+            favorites: [],
+            addToFavorites: jest.fn(),
+            removeFromFavorites: jest.fn(),
+          }}
+        >
+          {component}
+        </FavoritesContext.Provider>
       </WeatherContext.Provider>
     </TemperatureContext.Provider>
   );
