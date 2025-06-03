@@ -44,7 +44,7 @@ describe('Favorites API Endpoints', () => {
     expect(response.body[0].city_name).toBe('London');
   });
 
-  test('DELETE /api/weather/favorites/:id should remove a city from favorites', async () => {
+  test('DELETE /api/weather/favorites/:uuid/:city_id should remove a city from favorites', async () => {
     const favorite = await FavoriteCity.create({
       user_uuid: 'test-user',
       city_name: 'London',
@@ -52,9 +52,14 @@ describe('Favorites API Endpoints', () => {
     });
 
     const response = await request(app)
-      .delete(`/api/weather/favorites/${favorite._id}`);
+      .delete(`/api/weather/favorites/${favorite.user_uuid}/${favorite.city_id}`);
 
     expect(response.status).toBe(200);
     expect(response.body.message).toBe('Favorite deleted');
   });
 });
+
+afterAll(async () => {
+    await mongoose.connection.close();
+  });
+  
