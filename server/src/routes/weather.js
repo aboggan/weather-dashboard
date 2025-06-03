@@ -15,7 +15,7 @@ const router = express.Router();
 
 // Weather endpoints
 router.get('/current/:id', weatherRateLimiter, getCurrentWeather);
-router.get('/forecast/:city', getForecastWeather);
+router.get('/forecast/:id', getForecastWeather);
 
 // History endpoints
 router.get('/history/:uuid', weatherRateLimiter, getUserHistory);

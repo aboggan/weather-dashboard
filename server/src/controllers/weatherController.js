@@ -37,27 +37,42 @@ const getCurrentWeather = async (req, res) => {
   }
 };
 
-// GET /api/weather/forecast/:city
+// GET /api/weather/forecast/:id
 const getForecastWeather = async (req, res) => {
-  const city = req.params.city;
+  const id = req.params.id;
   const apiKey = process.env.OPENWEATHER_API_KEY;
 
+  const now = Date.now();
+  const cacheKey = `forecast_${id}`;
+  if (cache[cacheKey] && (now - cache[cacheKey].timestamp < CACHE_TTL_MS)) {
+    console.log('Serving forecast from cache');
+    return res.status(200).json(cache[cacheKey].data);
+  }
+
   try {
-    const url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric`;
+    const url = `https://api.openweathermap.org/data/2.5/forecast?id=${id}&appid=${apiKey}&units=metric`;
     const response = await axios.get(url);
 
-    const forecastData = response.data.list.slice(0, 5).map((entry) => ({
+    const forecastData = response.data.list.slice(0, 5).map(entry => ({
       date: entry.dt_txt,
       temp: entry.main.temp,
       description: entry.weather[0].description
     }));
 
-    res.status(200).json({
+    const result = {
       city: response.data.city.name,
       forecast: forecastData
-    });
+    };
+
+    // Save to cache
+    cache[cacheKey] = {
+      timestamp: now,
+      data: result
+    };
+
+    res.status(200).json(result);
   } catch (error) {
-    console.error(error);
+    console.error('Error fetching forecast:', error);
     res.status(500).json({ error: 'Failed to fetch forecast data' });
   }
 };
