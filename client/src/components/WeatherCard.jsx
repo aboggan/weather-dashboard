@@ -27,13 +27,13 @@ const formatDate = (dateString) => {
 };
 
 const InitialScreen = () => (
-    <div className={`${styles.weatherCard} ${styles.initialScreen}`}>
+    <div className={styles.initialScreen}>
         <p>Please select a city to view the weather.</p>
     </div>
 );
 
 const LoadingScreen = () => (
-    <div className={`${styles.weatherCard} ${styles.loadingScreen}`}>
+    <div className={styles.loadingScreen}>
         <p>Loading...</p>
     </div>
 );
@@ -47,6 +47,7 @@ const WeatherCard = () => {
     const [weather, setWeather] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [isVisible, setIsVisible] = useState(false);
 
     const isFavorite = favorites.some((fav) => fav.id === cityId);
 
@@ -90,6 +91,16 @@ const WeatherCard = () => {
         fetchWeather();
     }, [cityId]);
 
+    useEffect(() => {
+        if (loading) {
+            setIsVisible(false);
+        } else if (weather) {
+            setIsVisible(true);
+        } else {
+            setIsVisible(false);
+        }
+    }, [weather, loading]);
+
     if (!cityId) return <InitialScreen />;
     if (loading) return <LoadingScreen />;
     if (error) return <p>Error: {error}</p>;
@@ -104,10 +115,13 @@ const WeatherCard = () => {
     };
 
     return (
-        <div className={styles.weatherCard}>
+        <div className={`${styles.weatherCard} ${isVisible ? styles.visible : ''}`}>
             <div className={styles.cityField}>
                 <h2>{weather.name} <span>({weather.sys.country})</span></h2>
-                <div className={`${styles.favorite} ${isFavorite ? styles.active : ''}`} onClick={handleFavoriteClick}>
+                <div
+                    className={`${styles.favorite} ${isFavorite ? styles.active : ''}`}
+                    onClick={handleFavoriteClick}
+                >
                     <CiStar />
                 </div>
             </div>
