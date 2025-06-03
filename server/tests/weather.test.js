@@ -13,15 +13,21 @@ describe('Weather API Endpoints', () => {
     });
   });
 
-  describe('GET /api/weather/forecast/:city', () => {
+  describe('GET /api/weather/forecast/:id', () => {
     test('returns forecast data', async () => {
-      const city = 'London';
-      const response = await request(app).get(`/api/weather/forecast/${city}`);
-      
+      const id = 2643743; // London city ID
+      const response = await request(app).get(`/api/weather/forecast/${id}`);
+
       expect(response.statusCode).toBe(200);
-      expect(response.body).toHaveProperty('city', city);
+      expect(response.body).toHaveProperty('city');
+      expect(typeof response.body.city).toBe('string');
+      expect(response.body.city.toLowerCase()).toContain('london');
       expect(response.body).toHaveProperty('forecast');
       expect(Array.isArray(response.body.forecast)).toBe(true);
+      expect(response.body.forecast.length).toBeGreaterThan(0);
+      expect(response.body.forecast[0]).toHaveProperty('date');
+      expect(response.body.forecast[0]).toHaveProperty('temp');
+      expect(response.body.forecast[0]).toHaveProperty('description');
     });
   });
 
