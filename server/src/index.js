@@ -4,6 +4,7 @@ import corsMiddleware from './middleware/corsMiddleware.js';
 import weatherRoutes from './routes/weather.js';
 import connectDB from './models/db.js';
 const app = express();
+app.set('trust proxy', 1);
 connectDB();
 // Middlewares
 app.use(express.json());
