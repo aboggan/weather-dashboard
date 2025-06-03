@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { WeatherContext } from '../context/WeatherContext';
 import { TemperatureContext } from '../context/TemperatureContext';
+import { FavoritesContext } from '../context/FavoritesContext';
 import { CiStar } from "react-icons/ci";
 import { TbDroplet } from "react-icons/tb";
 import { LuWind, LuSunrise, LuSunset } from "react-icons/lu";
@@ -37,15 +38,26 @@ const LoadingScreen = () => (
     </div>
 );
 
-
 const WeatherCard = () => {
     const { weatherData } = useContext(WeatherContext);
     const { unit } = useContext(TemperatureContext);
+    const { favorites, addToFavorites, removeFromFavorites } = useContext(FavoritesContext);
     const cityId = weatherData?.id;
 
     const [weather, setWeather] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+
+    const isFavorite = favorites.some((fav) => fav.id === cityId);
+
+    const handleFavoriteClick = () => {
+        if (isFavorite) {
+            const favoriteToRemove = favorites.find((fav) => fav.id === cityId);
+            removeFromFavorites(favoriteToRemove);
+        } else {
+            addToFavorites({ name: weather.name, id: cityId });
+        }
+    };
 
     const convertWindSpeed = (speed) => {
         return unit === 'C'
@@ -95,7 +107,7 @@ const WeatherCard = () => {
         <div className={styles.weatherCard}>
             <div className={styles.cityField}>
                 <h2>{weather.name} <span>({weather.sys.country})</span></h2>
-                <div className={styles.favorite}>
+                <div className={`${styles.favorite} ${isFavorite ? styles.active : ''}`} onClick={handleFavoriteClick}>
                     <CiStar />
                 </div>
             </div>

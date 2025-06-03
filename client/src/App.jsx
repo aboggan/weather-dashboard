@@ -1,12 +1,15 @@
 import React from 'react';
 import styles from './components/AppWrapper.module.scss';
+import FavoritesList from './components/FavoritesList';
 import SearchBar from './components/SearchBar';
 import TemperatureToggle from './components/TemperatureToggle';
 import Title from './components/Title';
 import WeatherCard from './components/WeatherCard';
-import { WeatherProvider } from './context/WeatherContext';
-import { TemperatureProvider } from './context/TemperatureContext';
+import { FavoritesProvider } from './context/FavoritesContext';
 import { HistoryProvider } from './context/HistoryContext';
+import { TemperatureProvider } from './context/TemperatureContext';
+import { WeatherProvider } from './context/WeatherContext';
+
 import SearchHistory from './components/SearchHistory';
 
 const App = () => {
@@ -20,8 +23,15 @@ const App = () => {
         <WeatherProvider>
           <HistoryProvider>
             <SearchBar />
-            <WeatherCard />
-            <SearchHistory onSelect={(city) => console.log(city)} />
+            <FavoritesProvider>
+
+              <WeatherCard />
+              <div className={styles.bottom}>
+
+                <FavoritesList />
+                <SearchHistory onSelect={(city) => console.log(city)} />
+              </div>
+            </FavoritesProvider>
           </HistoryProvider>
         </WeatherProvider>
       </TemperatureProvider>

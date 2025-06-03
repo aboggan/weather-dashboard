@@ -13,5 +13,14 @@
       display: flex;
       justify-content: space-between;
     }
+    .bottom {
+      display: flex;
+      justify-content: space-between;
+      flex-direction: column;
+      gap: 1rem;
+      @media (min-width: 768px) {
+        flex-direction: row;
+      }
+    }
   }
 

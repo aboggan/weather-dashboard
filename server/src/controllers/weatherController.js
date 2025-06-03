@@ -188,21 +188,20 @@ const getFavoriteCities = async (req, res) => {
   }
 };
 
-
-// DELETE /api/weather/favorites/:id
+// DELETE /api/weather/favorites/:uuid/:cityId
 const deleteFavoriteCity = async (req, res) => {
-  const { id } = req.params;
+  const { uuid, cityId } = req.params;
 
   try {
-    const favorite = await FavoriteCity.findById(id);
+    const favorite = await FavoriteCity.findOne({ user_uuid: uuid, city_id: cityId });
     if (!favorite) {
       return res.status(404).json({ error: 'Favorite not found' });
     }
 
-    await FavoriteCity.findByIdAndDelete(id);
+    await FavoriteCity.deleteOne({ user_uuid: uuid, city_id: cityId });
 
     // Invalidate cache for this user's favorites
-    const cacheKey = `favorites_${favorite.user_uuid}`;
+    const cacheKey = `favorites_${uuid}`;
     delete cache[cacheKey];
 
     res.status(200).json({ message: 'Favorite deleted' });
