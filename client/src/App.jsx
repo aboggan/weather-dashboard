@@ -9,7 +9,7 @@ import { FavoritesProvider } from './context/FavoritesContext';
 import { HistoryProvider } from './context/HistoryContext';
 import { TemperatureProvider } from './context/TemperatureContext';
 import { WeatherProvider } from './context/WeatherContext';
-
+import Forecast from './components/Forecast';
 import SearchHistory from './components/SearchHistory';
 
 const App = () => {
@@ -26,6 +26,7 @@ const App = () => {
             <FavoritesProvider>
 
               <WeatherCard />
+              <Forecast />
               <div className={styles.bottom}>
 
                 <FavoritesList />

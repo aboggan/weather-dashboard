@@ -36,7 +36,6 @@ const getCurrentWeather = async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch weather data' });
   }
 };
-
 // GET /api/weather/forecast/:id
 const getForecastWeather = async (req, res) => {
   const id = req.params.id;
@@ -56,7 +55,8 @@ const getForecastWeather = async (req, res) => {
     const forecastData = response.data.list.slice(0, 5).map(entry => ({
       date: entry.dt_txt,
       temp: entry.main.temp,
-      description: entry.weather[0].description
+      description: entry.weather[0].description,
+      icon: entry.weather[0].icon // <- clave para mostrar el icono en el frontend
     }));
 
     const result = {
@@ -76,6 +76,7 @@ const getForecastWeather = async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch forecast data' });
   }
 };
+
 
 // GET /api/weather/history/:uuid
 const getUserHistory = async (req, res) => {

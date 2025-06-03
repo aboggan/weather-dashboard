@@ -1,10 +1,10 @@
 .wrapper {
-    padding: 0 1rem; // mobile default
+    padding: 1rem; // mobile default
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
     @media (min-width: 768px) {
-      padding: 0 4rem; // desktop padding
+      padding: 2rem 4rem; // desktop padding
       max-width: 900px;
       margin: 0 auto;
     }
