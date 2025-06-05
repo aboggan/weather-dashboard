@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { WeatherContext } from '../context/WeatherContext';
-import { TemperatureContext } from '../context/TemperatureContext';
-import { FavoritesContext } from '../context/FavoritesContext';
-import { CiStar } from "react-icons/ci";
+import React, { useContext, useEffect, useState } from 'react';
+import { FaRegStar, FaStar } from 'react-icons/fa';
+import { LuSunrise, LuSunset, LuWind } from "react-icons/lu";
 import { TbDroplet } from "react-icons/tb";
-import { LuWind, LuSunrise, LuSunset } from "react-icons/lu";
-import styles from './WeatherCard.module.scss';
+import { FavoritesContext } from '../context/FavoritesContext';
+import { TemperatureContext } from '../context/TemperatureContext';
+import { WeatherContext } from '../context/WeatherContext';
 import { getApiUrl } from '../utils/getApiUrl';
+import styles from './WeatherCard.module.scss';
 
 const formatTime = (timestamp, timezoneOffset) => {
     const date = new Date((timestamp + timezoneOffset) * 1000);
@@ -37,6 +37,11 @@ const LoadingScreen = () => (
         <p>Loading...</p>
     </div>
 );
+
+const capitalize = (str) => {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1);
+};
 
 const WeatherCard = () => {
     const { weatherData } = useContext(WeatherContext);
@@ -121,12 +126,15 @@ const WeatherCard = () => {
     return (
         <div className={`${styles.weatherCard} ${isVisible ? styles.visible : ''}`}>
             <div className={styles.cityField}>
-                <h2>{weather.name} <span>({weather.sys.country})</span></h2>
+                <div className={styles.cityName}>
+
+                    <h2>{weather.name}</h2> <span>({weather.sys.country})</span>
+                </div>
                 <div
                     className={`${styles.favorite} ${isFavorite ? styles.active : ''}`}
                     onClick={handleFavoriteClick}
                 >
-                    <CiStar />
+                    {isFavorite ? <FaStar /> : <FaRegStar />}
                 </div>
             </div>
 
@@ -140,9 +148,9 @@ const WeatherCard = () => {
                         <div className={styles.temp}>
                             {convertTemperature(weather.main.temp)}°{unit}
                         </div>
-                        <div className={styles.description}>{weather.weather[0].description}</div>
+                        <div className={styles.description}>{capitalize(weather.weather[0].description)}</div>
                         <div className={styles.feelsLike}>
-                            Feels like: {convertTemperature(weather.main.feels_like)}°{unit}
+                            Feels like {convertTemperature(weather.main.feels_like)}°{unit}
                         </div>
                     </div>
                 </div>
