@@ -229,6 +229,27 @@ const deleteFavoriteCity = async (req, res) => {
   }
 };
 
+// DELETE /api/weather/favorites/:uuid
+const deleteAllFavoriteCities = async (req, res) => {
+  const { uuid } = req.params;
+
+  try {
+    const result = await FavoriteCity.deleteMany({ user_uuid: uuid });
+    console.log(`Deleted count: ${result.deletedCount}`);
+
+    // Invalidate cache
+    const cacheKey = `favorites_${uuid}`;
+    delete cache[cacheKey];
+
+    res.status(200).json({
+      message: `Deleted ${result.deletedCount} favorites`
+    });
+  } catch (error) {
+    console.error('Error deleting all favorites:', error);
+    res.status(500).json({ error: 'Error deleting all favorites' });
+  }
+};
+
 export {
   getCurrentWeather,
   getForecastWeather,
@@ -237,5 +258,6 @@ export {
   deleteUserHistory,
   addFavoriteCity,
   getFavoriteCities,
-  deleteFavoriteCity
+  deleteFavoriteCity,
+  deleteAllFavoriteCities
 };

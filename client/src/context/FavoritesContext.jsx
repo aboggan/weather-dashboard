@@ -83,6 +83,18 @@ export const FavoritesProvider = ({ children }) => {
     }
   };
 
+  const removeAllFavoritesFromBackend = async () => {
+    setFavorites([]);
+    localStorage.removeItem('weatherFavorites');
+    try {
+      await fetch(`${getApiUrl()}/api/weather/favorites/${userUUID}`, {
+        method: 'DELETE'
+      });
+    } catch (error) {
+      console.error('Error deleting all favorites:', error);
+    }
+  };
+
   const removeFromFavorites = (favorite) => {
     setFavorites((prev) => prev.filter((item) => item.id !== favorite.id));
     deleteFavoriteFromBackend(favorite.id);
@@ -91,6 +103,7 @@ export const FavoritesProvider = ({ children }) => {
   const removeAllFavorites = () => {
     setFavorites([]);
     localStorage.removeItem('weatherFavorites');
+    removeAllFavoritesFromBackend();
   };
 
   return (
