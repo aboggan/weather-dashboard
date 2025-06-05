@@ -28,6 +28,6 @@ router.delete('/history/:uuid', weatherRateLimiter, deleteUserHistory);
 router.post('/favorites', addFavoriteCity);
 router.get('/favorites/:uuid', getFavoriteCities);
 router.delete('/favorites/:uuid/:cityId', deleteFavoriteCity);
-router.delete('/favorites/:user_uuid', deleteAllFavoriteCities);
+router.delete('/favorites/:uuid', deleteAllFavoriteCities);
 
 export default router;

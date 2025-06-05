@@ -235,7 +235,7 @@ const deleteAllFavoriteCities = async (req, res) => {
 
   try {
     const result = await FavoriteCity.deleteMany({ user_uuid: uuid });
-    console.log(`Deleted count: ${result.deletedCount}`);
+    
 
     // Invalidate cache
     const cacheKey = `favorites_${uuid}`;
