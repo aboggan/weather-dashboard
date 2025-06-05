@@ -33,7 +33,8 @@ export const HistoryProvider = ({ children }) => {
         if (Array.isArray(data)) {
           setHistory(data.map(item => ({
             name: item.city_name,
-            id: item.city_id
+            id: item.city_id,
+            country: item.country
           })));
         }
       })
@@ -45,8 +46,11 @@ export const HistoryProvider = ({ children }) => {
   }, [history]);
 
   const addToHistory = (city) => {
-    if (!history.some((item) => item.name === city.name)) {
-      setHistory((prev) => [{ name: city.name, id: city.id }, ...prev.slice(0, 9)]);
+    if (!history.some((item) => item.id === city.id)) {
+      setHistory((prev) => [
+        { name: city.name, id: city.id, country: city.country },
+        ...prev.slice(0, 9)
+      ]);
       persistHistory(city);
     }
   };
@@ -59,6 +63,7 @@ export const HistoryProvider = ({ children }) => {
         body: JSON.stringify({
           id: entry.id,
           name: entry.name,
+          country: entry.country,
           uuid: userUUID
         })
       });

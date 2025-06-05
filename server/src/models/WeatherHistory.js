@@ -13,6 +13,10 @@ const weatherHistorySchema = new mongoose.Schema({
     type: Number,
     required: true
   },
+  country: {
+    type: String,
+    required: true
+  },
   searched_at: {
     type: Date,
     default: Date.now

@@ -26,7 +26,7 @@ const SearchHistory = () => {
               className={styles.historyItem}
               onClick={() => handleSelect(item)}
             >
-              {item.name}
+              {item.name}, {item.country}
             </button>
           ))
         )}

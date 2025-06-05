@@ -109,12 +109,13 @@ const getUserHistory = async (req, res) => {
 
 // POST /api/weather/history
 const addUserHistory = async (req, res) => {
-  const { id, name, uuid } = req.body;
+  const { id, name, country, uuid } = req.body;
   try {
     const entry = new WeatherHistory({
       user_uuid: uuid,
       city_name: name,
-      city_id: id
+      city_id: id,
+      country
     });
     await entry.save();
 
