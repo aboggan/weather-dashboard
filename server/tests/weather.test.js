@@ -46,6 +46,7 @@ describe('Weather API Endpoints', () => {
       const newEntry = {
         id: 5128581,
         name: 'New York',
+        country: 'US',
         uuid: '1234abcd-5678-efgh-ijkl-9876mnopqrst'
       };
       const response = await request(app)

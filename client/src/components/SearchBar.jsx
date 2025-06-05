@@ -47,7 +47,7 @@ const SearchBar = () => {
 
     const handleSuggestionClick = (selectedCity) => {
         setWeatherData({ city: selectedCity.name, id: selectedCity.id });
-        addToHistory({ name: selectedCity.name, id: selectedCity.id });
+        addToHistory({ name: selectedCity.name, id: selectedCity.id, country: selectedCity.country });
         setCity(selectedCity.name);
         setSuggestions([]);
         setErrorMessage('');
@@ -69,7 +69,7 @@ const SearchBar = () => {
 
         if (matchingCity) {
             setWeatherData({ city: matchingCity.name, id: matchingCity.id });
-            addToHistory({ name: matchingCity.name, id: matchingCity.id });
+            addToHistory({ name: matchingCity.name, id: matchingCity.id, country: matchingCity.country });
             setErrorMessage('');
             setCity(matchingCity.name);
         } else {
