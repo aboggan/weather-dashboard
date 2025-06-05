@@ -30,10 +30,13 @@ export const FavoritesProvider = ({ children }) => {
       })
       .then(data => {
         if (Array.isArray(data)) {
-          setFavorites(data.map(item => ({
-            name: item.city_name,
-            id: item.city_id
-          })));
+          setFavorites(
+            data.map(item => ({
+              name: item.city_name,
+              id: item.city_id,
+              country: item.country
+            }))
+          );
         }
       })
       .catch(err => console.error('Error fetching favorites:', err));
@@ -44,8 +47,11 @@ export const FavoritesProvider = ({ children }) => {
   }, [favorites]);
 
   const addToFavorites = (city) => {
-    if (!favorites.some((item) => item.name === city.name)) {
-      setFavorites((prev) => [{ name: city.name, id: city.id }, ...prev]);
+    if (!favorites.some((item) => item.id === city.id)) {
+      setFavorites((prev) => [
+        { name: city.name, id: city.id, country: city.country },
+        ...prev
+      ]);
       persistFavorite(city);
     }
   };
@@ -58,7 +64,8 @@ export const FavoritesProvider = ({ children }) => {
         body: JSON.stringify({
           user_uuid: userUUID,
           city_name: entry.name,
-          city_id: entry.id
+          city_id: entry.id,
+          country: entry.country
         })
       });
     } catch (error) {

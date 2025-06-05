@@ -22,7 +22,8 @@ describe('Favorites API Endpoints', () => {
       .send({
         user_uuid: 'test-user',
         city_name: 'London',
-        city_id: 12345
+        city_id: 12345,
+        country: 'GB'
       });
 
     expect(response.status).toBe(201);
@@ -33,7 +34,8 @@ describe('Favorites API Endpoints', () => {
     await FavoriteCity.create({
       user_uuid: 'test-user',
       city_name: 'London',
-      city_id: 12345
+      city_id: 12345,
+      country: 'GB'
     });
 
     const response = await request(app)
@@ -48,7 +50,8 @@ describe('Favorites API Endpoints', () => {
     const favorite = await FavoriteCity.create({
       user_uuid: 'test-user',
       city_name: 'London',
-      city_id: 12345
+      city_id: 12345,
+      country: 'GB'
     });
 
     const response = await request(app)

@@ -131,7 +131,8 @@ describe('Weather API Endpoints', () => {
       const favorite = await FavoriteCity.create({
         user_uuid: 'test-user',
         city_name: 'London',
-        city_id: 12345
+        city_id: 12345,
+        country: 'GB'
       });
 
       const response = await request(app)

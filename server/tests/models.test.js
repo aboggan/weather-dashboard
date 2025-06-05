@@ -24,7 +24,8 @@ describe('FavoriteCity model', () => {
     const favorite = await FavoriteCity.create({
       user_uuid: 'model-test-user',
       city_name: 'Paris',
-      city_id: 98765
+      city_id: 98765,
+      country: 'FR'
     });
 
     expect(favorite.city_name).toBe('Paris');
