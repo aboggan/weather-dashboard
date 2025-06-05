@@ -56,7 +56,11 @@ const WeatherCard = () => {
             const favoriteToRemove = favorites.find((fav) => fav.id === cityId);
             removeFromFavorites(favoriteToRemove);
         } else {
-            addToFavorites({ name: weather.name, id: cityId });
+            addToFavorites({
+                name: weather.name,
+                id: cityId,
+                country: weather.sys.country
+            });
         }
     };
 

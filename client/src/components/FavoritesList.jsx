@@ -16,13 +16,13 @@ const FavoritesList = () => {
         <>
           <div className={styles.favoritesList}>
             {favorites.map((city) => (
-              <span
-                key={city.id}
+              <button
+                key={`${city.id}-${city.country}`}
                 className={styles.favoriteItem}
-                onClick={() => setWeatherData(city)}
+                onClick={() => setWeatherData({ city: city.name, id: city.id })}
               >
-                {city.name}
-              </span>
+                {city.name}, {city.country}
+              </button>
             ))}
           </div>
           <button className={styles.clearButton} onClick={removeAllFavorites}>

@@ -9,6 +9,10 @@ const favoriteCitySchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  country: {
+    type: String,
+    required: true
+  },
   city_id: {
     type: Number,
     required: true

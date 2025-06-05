@@ -149,9 +149,9 @@ const deleteUserHistory = async (req, res) => {
 
 // POST /api/weather/favorites
 const addFavoriteCity = async (req, res) => {
-  const { user_uuid, city_name, city_id } = req.body;
+  const { user_uuid, city_name, city_id, country } = req.body;
 
-  if (!user_uuid || !city_name || !city_id) {
+  if (!user_uuid || !city_name || !city_id || !country) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
@@ -159,7 +159,8 @@ const addFavoriteCity = async (req, res) => {
     const newFavorite = new FavoriteCity({
       user_uuid,
       city_name,
-      city_id
+      city_id,
+      country
     });
     await newFavorite.save();
 

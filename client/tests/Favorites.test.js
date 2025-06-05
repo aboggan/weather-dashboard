@@ -52,7 +52,7 @@ describe('FavoritesContext', () => {
       );
     });
 
-    const newCity = { name: 'London', id: 2643743 };
+    const newCity = { name: 'London', id: 2643743, country: 'GB' };
 
     await act(async () => {
       favoritesValue.addToFavorites(newCity);
@@ -78,7 +78,7 @@ describe('FavoritesContext', () => {
       );
     });
 
-    const city = { name: 'London', id: 2643743 };
+    const city = { name: 'London', id: 2643743, country: 'GB' };
 
     await act(async () => {
       favoritesValue.addToFavorites(city);
