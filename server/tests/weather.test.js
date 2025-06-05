@@ -2,8 +2,11 @@ import request from 'supertest';
 import nock from 'nock';
 import app from '../src/index.js';
 import mongoose from 'mongoose';
+import FavoriteCity from '../src/models/FavoriteCity.js';
 
 beforeAll(() => {
+  jest.spyOn(console, 'error').mockImplementation(() => {});
+  jest.spyOn(console, 'log').mockImplementation(() => {});
   process.env.OPENWEATHER_API_KEY = 'test-key';
 });
 
@@ -33,7 +36,7 @@ describe('Weather API Endpoints', () => {
       expect(response.body).toHaveProperty('id', id);
     });
 
-    test('handles weather api errors', async () => {
+    test('handles weather API errors', async () => {
       const id = 11111;
 
       nock('https://api.openweathermap.org')
@@ -50,7 +53,7 @@ describe('Weather API Endpoints', () => {
 
   describe('GET /api/weather/forecast/:id', () => {
     test('returns forecast data', async () => {
-      const id = 2643743; // London city ID
+      const id = 2643743;
       const mockForecast = {
         city: { name: 'London' },
         list: [
@@ -81,7 +84,7 @@ describe('Weather API Endpoints', () => {
       expect(response.body.forecast[0]).toHaveProperty('description');
     });
 
-    test('handles forecast api errors', async () => {
+    test('handles forecast API errors', async () => {
       const id = 22222;
 
       nock('https://api.openweathermap.org')
@@ -100,7 +103,7 @@ describe('Weather API Endpoints', () => {
     test('returns user history', async () => {
       const uuid = '1234abcd-5678-efgh-ijkl-9876mnopqrst';
       const response = await request(app).get(`/api/weather/history/${uuid}`);
-      
+
       expect(response.statusCode).toBe(200);
       expect(Array.isArray(response.body)).toBe(true);
     });
@@ -117,9 +120,25 @@ describe('Weather API Endpoints', () => {
       const response = await request(app)
         .post('/api/weather/history')
         .send(newEntry);
-      
+
       expect(response.statusCode).toBe(201);
       expect(response.body).toHaveProperty('message', 'History saved');
+    });
+  });
+
+  describe('DELETE /api/weather/favorites/:uuid/:city_id', () => {
+    test('removes a city from favorites', async () => {
+      const favorite = await FavoriteCity.create({
+        user_uuid: 'test-user',
+        city_name: 'London',
+        city_id: 12345
+      });
+
+      const response = await request(app)
+        .delete(`/api/weather/favorites/${favorite.user_uuid}/${favorite.city_id}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body.message).toBe('Favorite deleted');
     });
   });
 });
