@@ -1,21 +1,72 @@
 import request from 'supertest';
+import nock from 'nock';
 import app from '../src/index.js';
 import mongoose from 'mongoose';
+
+beforeAll(() => {
+  process.env.OPENWEATHER_API_KEY = 'test-key';
+});
+
+beforeEach(() => {
+  nock.cleanAll();
+});
+
+afterAll(async () => {
+  nock.restore();
+  await mongoose.connection.close();
+});
 
 describe('Weather API Endpoints', () => {
   describe('GET /api/weather/current/:id', () => {
     test('returns weather data', async () => {
       const id = 3026520;
+      const mockWeather = { id, name: 'Test City', weather: [] };
+
+      nock('https://api.openweathermap.org')
+        .get('/data/2.5/weather')
+        .query(true)
+        .reply(200, mockWeather);
+
       const response = await request(app).get(`/api/weather/current/${id}`);
-      
+
       expect(response.statusCode).toBe(200);
       expect(response.body).toHaveProperty('id', id);
+    });
+
+    test('handles weather api errors', async () => {
+      const id = 11111;
+
+      nock('https://api.openweathermap.org')
+        .get('/data/2.5/weather')
+        .query(true)
+        .reply(500, { message: 'error' });
+
+      const response = await request(app).get(`/api/weather/current/${id}`);
+
+      expect(response.statusCode).toBe(500);
+      expect(response.body).toHaveProperty('error');
     });
   });
 
   describe('GET /api/weather/forecast/:id', () => {
     test('returns forecast data', async () => {
       const id = 2643743; // London city ID
+      const mockForecast = {
+        city: { name: 'London' },
+        list: [
+          {
+            dt_txt: '2024-01-01 00:00:00',
+            main: { temp: 20 },
+            weather: [{ description: 'sunny', icon: '01d' }]
+          }
+        ]
+      };
+
+      nock('https://api.openweathermap.org')
+        .get('/data/2.5/forecast')
+        .query(true)
+        .reply(200, mockForecast);
+
       const response = await request(app).get(`/api/weather/forecast/${id}`);
 
       expect(response.statusCode).toBe(200);
@@ -28,6 +79,20 @@ describe('Weather API Endpoints', () => {
       expect(response.body.forecast[0]).toHaveProperty('date');
       expect(response.body.forecast[0]).toHaveProperty('temp');
       expect(response.body.forecast[0]).toHaveProperty('description');
+    });
+
+    test('handles forecast api errors', async () => {
+      const id = 22222;
+
+      nock('https://api.openweathermap.org')
+        .get('/data/2.5/forecast')
+        .query(true)
+        .reply(500, { message: 'error' });
+
+      const response = await request(app).get(`/api/weather/forecast/${id}`);
+
+      expect(response.statusCode).toBe(500);
+      expect(response.body).toHaveProperty('error');
     });
   });
 
@@ -57,8 +122,4 @@ describe('Weather API Endpoints', () => {
       expect(response.body).toHaveProperty('message', 'History saved');
     });
   });
-});
-
-afterAll(async () => {
-  await mongoose.connection.close();
 });
