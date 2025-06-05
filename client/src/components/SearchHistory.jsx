@@ -13,27 +13,27 @@ const SearchHistory = () => {
 
   return (
     <div className={styles.historyContainer}>
-      <div className={styles.header}>
-        <h3>Search History</h3>
-      </div>
-      <div className={styles.historyList}>
-        {history.length === 0 ? (
-          <p className={styles.empty}>No search history yet.</p>
-        ) : (
-          history.map((item, index) => (
-            <button
-              key={index}
-              className={styles.historyItem}
-              onClick={() => handleSelect(item)}
-            >
-              {item.name}, {item.country}
-            </button>
-          ))
-        )}
-      </div>
-      <button className={styles.clearButton} onClick={clearHistory}>
-        Clear History
-      </button>
+      <h3>Search History</h3>
+      {history.length === 0 ? (
+        <p className={styles.empty}>No search history yet.</p>
+      ) : (
+        <>
+          <div className={styles.historyList}>
+            {history.map((item, index) => (
+              <button
+                key={index}
+                className={styles.historyItem}
+                onClick={() => handleSelect(item)}
+              >
+                {item.name} <span>({item.country})</span>
+              </button>
+            ))}
+          </div>
+          <button className={styles.clearButton} onClick={clearHistory}>
+            Clear History
+          </button>
+        </>
+      )}
     </div>
   );
 };

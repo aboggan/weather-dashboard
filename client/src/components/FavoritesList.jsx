@@ -21,7 +21,7 @@ const FavoritesList = () => {
                 className={styles.favoriteItem}
                 onClick={() => setWeatherData({ city: city.name, id: city.id })}
               >
-                {city.name}, {city.country}
+                {city.name} <span>({city.country})</span>
               </button>
             ))}
           </div>
