@@ -29,6 +29,7 @@
         font-size: 1.2rem;
         font-weight: bold;
         color: #333;
+        align-self: flex-start;
     }
 }
 .forecastCards {
@@ -62,20 +63,31 @@
     background-color: #fff;
     border-radius: 8px;
     border: 1px solid $color-border;
-    padding: 1rem;
-    width: 120px;
+    padding: 0.5rem;
+    width: 165px;
     text-align: center;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-
+    box-sizing: border-box;
     img {
-        width: 50px;
-        height: 50px;
+        width: 60px;
+        height: 60px;
     }
 
     p {
         margin: 0.3rem 0;
         font-size: 0.9rem;
         color: #333;
+    }
+    .temp {
+        font-size: 1.2rem;
+    }
+    .date {
+        font-size: 1rem;
+        font-weight: 600;
+    }
+    .description {
+    font-weight: normal;
+    color: $color-heavy-grey;
     }
 }
 

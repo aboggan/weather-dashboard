@@ -16,6 +16,11 @@ const LoadingScreen = () => (
     </div>
 );
 
+const capitalize = (str) => {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1);
+};
+
 const Forecast = () => {
     const { weatherData } = useContext(WeatherContext);
     const { unit } = useContext(TemperatureContext);
@@ -77,17 +82,17 @@ const Forecast = () => {
             <div className={styles.forecastCards}>
                 {forecast.map((day, index) => (
                     <div key={index} className={styles.card}>
-                        <img
-                            src={`http://openweathermap.org/img/wn/${day.icon}@2x.png`}
-                            alt={day.description}
-                        />
-                        <p>{new Date(day.date).toLocaleDateString('en-US', {
+                        <p className={styles.date}>{new Date(day.date).toLocaleDateString('en-US', {
                             weekday: 'short',
                             month: 'short',
                             day: 'numeric'
                         })}</p>
-                        <p>{convertTemperature(day.temp)}°{unit}</p>
-                        <p>{day.description}</p>
+                        <img
+                            src={`http://openweathermap.org/img/wn/${day.icon}@2x.png`}
+                            alt={day.description}
+                        />
+                        <p className={styles.temp}>{convertTemperature(day.temp)}°{unit}</p>
+                        <p className={styles.description}>{capitalize(day.description)}</p>
                     </div>
                 ))}
             </div>
