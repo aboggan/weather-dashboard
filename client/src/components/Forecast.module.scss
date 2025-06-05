@@ -5,40 +5,40 @@
     flex-direction: column;
     align-items: center;
     background-color: #fff;
-    border-radius: 8px;
+    border-radius: $border-radius;
     border: 1px solid $color-border;
     width: 100%;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     font-family: $font-family;
-    padding: 0 1.5rem;
-    padding-bottom: 1rem;
     overflow: hidden;
     max-height: 0;
     opacity: 0;
     transition: max-height 1.8s ease, opacity 0.6s ease;
     box-sizing: border-box;
-    
+    padding: 1rem 0;
+
     &.visible {
         max-height: 2000px;
         opacity: 1;
     }
 
     h3 {
-        margin-top: 1rem;
-        margin-bottom: 1rem;
-        font-size: 1.2rem;
+        margin: 0;
+        padding-left: 1.5rem;
+        font-size: 1rem;
         font-weight: bold;
         color: #333;
         align-self: flex-start;
+        margin-bottom: 1.5rem;
     }
 }
 .forecastCards {
     display: flex;
     gap: 1rem;
-    max-width: 100%;
+    width: 100%;
     overflow-x: auto;
-    padding: 0 1rem;
-    padding-bottom: 1rem;
+    box-sizing: border-box;
+    padding-left: 1.5rem;
     
     -webkit-overflow-scrolling: touch; // para iOS
 

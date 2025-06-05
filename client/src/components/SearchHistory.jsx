@@ -2,6 +2,9 @@ import React, { useContext } from 'react';
 import { HistoryContext } from '../context/HistoryContext';
 import { WeatherContext } from '../context/WeatherContext';
 import styles from './SearchHistory.module.scss';
+import { FaHistory } from "react-icons/fa";
+
+import { FaRegTrashAlt } from "react-icons/fa";
 
 const SearchHistory = () => {
   const { history, clearHistory } = useContext(HistoryContext);
@@ -13,7 +16,11 @@ const SearchHistory = () => {
 
   return (
     <div className={styles.historyContainer}>
-      <h3>Search History</h3>
+      <div className={styles.title}>
+        <FaHistory />
+
+        <h3>Search History</h3>
+      </div>
       {history.length === 0 ? (
         <p className={styles.empty}>No search history yet.</p>
       ) : (
@@ -29,9 +36,12 @@ const SearchHistory = () => {
               </button>
             ))}
           </div>
-          <button className={styles.clearButton} onClick={clearHistory}>
+          <div className={styles.clearContainer}>
+            <button className={styles.clearButton} onClick={clearHistory}>
+            <FaRegTrashAlt className={styles.deleteIcon} />
             Clear History
           </button>
+          </div>
         </>
       )}
     </div>
