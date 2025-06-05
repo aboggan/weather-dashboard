@@ -82,9 +82,11 @@
 }
 
 .error {
+  font-family: $font-family;
   color: $color-primary;
   margin-top: 0.5rem;
   font-size: 0.9rem;
+  padding-left: 1rem;
 }
 
 @media screen and (min-width: 768px) {

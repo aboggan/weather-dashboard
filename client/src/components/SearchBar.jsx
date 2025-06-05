@@ -55,6 +55,12 @@ const SearchBar = () => {
     };
 
     const handleSearchSubmit = async () => {
+        if (!city.trim()) {
+            setErrorMessage('Please enter a city name.');
+            setSuggestions([]);
+            setSelectedIndex(-1);
+            return;
+        }
         await loadCities();
 
         let matchingCity = null;
