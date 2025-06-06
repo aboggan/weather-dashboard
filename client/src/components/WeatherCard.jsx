@@ -7,7 +7,7 @@ import { TemperatureContext } from '../context/TemperatureContext';
 import { WeatherContext } from '../context/WeatherContext';
 import { getApiUrl } from '../utils/getApiUrl';
 import styles from './WeatherCard.module.scss';
-
+import { PiSpinnerBold } from "react-icons/pi";
 const formatTime = (timestamp, timezoneOffset) => {
     const date = new Date((timestamp + timezoneOffset) * 1000);
     return date.toLocaleTimeString('en-US', {
@@ -34,7 +34,8 @@ const InitialScreen = () => (
 
 const LoadingScreen = () => (
     <div className={styles.loadingScreen}>
-        <p>Loading...</p>
+        <PiSpinnerBold/> 
+       <p>  Loading...</p>
     </div>
 );
 

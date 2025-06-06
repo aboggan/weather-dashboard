@@ -4,14 +4,17 @@ import { TemperatureContext } from '../context/TemperatureContext';
 import styles from './Forecast.module.scss';
 import { getApiUrl } from '../utils/getApiUrl';
 
+import { PiSpinnerBold } from "react-icons/pi";
+
 const InitialScreen = () => (
     <div className={styles.initialScreen}>
-        <p>Please select a city to view the forecast.</p>
+       <h3>5-Day Forecast</h3>
     </div>
 );
 
 const LoadingScreen = () => (
     <div className={styles.loadingScreen}>
+        <PiSpinnerBold />
         <p>Loading forecast...</p>
     </div>
 );
